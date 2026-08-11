@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="machine_leaning_repo_banner.png" alt="Machine Learning Banner" width="100%">
+  <img src="machine_learning_repo_banner.png" alt="Machine Learning Banner" width="100%">
 </p>
 
 <div align="center">
