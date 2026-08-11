@@ -28,17 +28,6 @@ This repository documents my journey into **Machine Learning**. It contains a gr
 
 ---
 
-## ⚙️ Setup
-```bash
-git clone https://github.com/abongilejojozi/machine-learning.git
-cd machine-learning
-conda env create -f environment.yml
-conda activate ml-env
-jupyter notebook
-```
-
----
-
 ## 🛠️ Technologies
 <p align="center">
 <a href="https://www.python.org/">
