@@ -2,6 +2,7 @@ name: abongilej_ml
 channels:
   - defaults
 dependencies:
+  - _openmp_mutex=2.0=52_msvc
   - anyio=4.12.1=py313haa95532_0
   - argon2-cffi=25.1.0=py313haa95532_0
   - argon2-cffi-bindings=25.1.0=py313h02ab6af_0
@@ -46,6 +47,7 @@ dependencies:
   - ipywidgets=8.1.7=py313haa95532_1
   - jedi=0.20.0=py313haa95532_0
   - jinja2=3.1.6=py313haa95532_0
+  - joblib=1.5.3=py313haa95532_0
   - jpeg=9f=ha349fce_0
   - json5=0.15.0=py313haa95532_0
   - jsonschema=4.25.1=py313haa95532_0
@@ -92,6 +94,7 @@ dependencies:
   - mkl_random=1.4.1=py313hf6ff4c0_0
   - mysql-common=9.3.0=h0b12ad4_6
   - mysql-libs=9.3.0=h08a8c37_6
+  - narwhals=2.23.0=py313haa95532_0
   - nbclient=0.11.0=py313haa95532_0
   - nbconvert=7.17.1=py313haa95532_0
   - nbconvert-core=7.17.1=py313haa95532_0
@@ -148,6 +151,8 @@ dependencies:
   - rfc3339-validator=0.1.4=py313haa95532_0
   - rfc3986-validator=0.1.1=py313haa95532_0
   - rpds-py=0.28.0=py313h114bc41_0
+  - scikit-learn=1.9.0=py313h6c0dd63_0
+  - scipy=1.18.0=py313h97a0a95_0
   - send2trash=1.8.3=py313haa95532_0
   - setuptools=83.0.0=py313haa95532_0
   - sip=6.15.1=py313h9561cc3_0
@@ -158,6 +163,7 @@ dependencies:
   - tbb=2022.3.0=h90c84d6_0
   - tbb-devel=2022.3.0=h90c84d6_0
   - terminado=0.18.1=py313haa95532_1
+  - threadpoolctl=3.5.0=py313h4442805_1
   - tinycss2=1.5.1=py313haa95532_0
   - tk=8.6.15=hf199647_0
   - tornado=6.5.7=py313h1c6eee0_0
@@ -169,6 +175,7 @@ dependencies:
   - urllib3=2.7.0=py313haa95532_0
   - vc=14.3=h2df5915_12
   - vc14_runtime=14.44.35208=h4927774_12
+  - vcomp14=14.44.35208=h4927774_12
   - vs2015_runtime=14.44.35208=ha6b5a95_12
   - wcwidth=0.8.2=py313haa95532_0
   - webencodings=0.5.1=py313haa95532_2
