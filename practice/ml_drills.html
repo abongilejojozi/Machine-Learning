@@ -1,0 +1,452 @@
+<style>
+  :root{
+    --bg:#0b0d10; --panel:#14171c; --panel2:#1b1f26; --line:#262b33;
+    --text:#e8ebf0; --dim:#8c93a1; --accent:#5ee0a0; --accent2:#ffb454;
+    --danger:#ff6b6b; --mono:'IBM Plex Mono','SFMono-Regular',Menlo,Consolas,monospace;
+    --sans:'IBM Plex Sans',system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  .app{
+    background:var(--bg); color:var(--text); font-family:var(--sans);
+    min-height:600px; padding:28px 20px 40px; border-radius:8px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;flex-wrap:wrap;gap:8px;}
+  .brand{font-family:var(--mono);font-size:13px;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;}
+  .counts{font-family:var(--mono);font-size:12px;color:var(--dim);display:flex;gap:14px;}
+  .counts b{color:var(--text);}
+  .barwrap{height:6px;background:var(--panel2);border-radius:3px;overflow:hidden;margin:12px 0 26px;}
+  .bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .35s ease;}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:24px 24px 22px;}
+  .topic{font-family:var(--mono);font-size:11px;color:var(--accent2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
+  .task-title{font-size:20px;font-weight:600;line-height:1.35;margin:0 0 14px;}
+  .task-body{font-size:15px;line-height:1.6;color:#cfd4dc;margin-bottom:18px;}
+  .task-body code{font-family:var(--mono);background:var(--panel2);padding:1px 6px;border-radius:4px;font-size:13.5px;color:var(--accent);}
+
+  label.field-label{display:block;font-family:var(--mono);font-size:11.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+  textarea{
+    width:100%;min-height:92px;background:var(--panel2);color:var(--text);
+    border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-family:var(--mono);
+    font-size:13.5px;line-height:1.5;resize:vertical;outline:none;
+  }
+  textarea:focus{border-color:var(--accent);}
+  .hint{font-size:12px;color:var(--dim);margin-top:6px;}
+
+  .btnrow{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
+  button{
+    font-family:var(--sans);font-size:14px;font-weight:600;border:none;border-radius:7px;
+    padding:11px 18px;cursor:pointer;transition:transform .08s ease, opacity .15s ease;
+  }
+  button:active{transform:scale(.97);}
+  button:disabled{opacity:.35;cursor:not-allowed;}
+  .btn-primary{background:var(--accent);color:#08120d;}
+  .btn-ghost{background:transparent;color:var(--dim);border:1px solid var(--line);}
+  .btn-ghost:hover{color:var(--text);}
+
+  .reveal{margin-top:20px;border-top:1px dashed var(--line);padding-top:18px;display:none;}
+  .reveal.show{display:block;}
+  .reveal h4{font-family:var(--mono);font-size:11.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin:0 0 10px;}
+  .reveal ul{margin:0 0 4px;padding-left:20px;}
+  .reveal li{font-size:14px;line-height:1.55;color:#cfd4dc;margin-bottom:6px;}
+
+  .rate-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
+  .rate-btn{flex:1;min-width:130px;background:var(--panel2);color:var(--text);border:1px solid var(--line);}
+  .rate-btn.nailed:hover{border-color:var(--accent);color:var(--accent);}
+  .rate-btn.shaky:hover{border-color:var(--accent2);color:var(--accent2);}
+  .rate-btn.stuck:hover{border-color:var(--danger);color:var(--danger);}
+
+  .done-screen{text-align:center;padding:40px 10px;}
+  .done-screen h2{font-size:24px;margin-bottom:10px;}
+  .done-screen p{color:var(--dim);font-size:14px;margin-bottom:22px;}
+  .stucklist{text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:16px 18px;margin:0 auto 22px;max-width:480px;}
+  .stucklist li{font-size:14px;color:#cfd4dc;margin-bottom:6px;}
+
+  .footer-note{font-family:var(--mono);font-size:11px;color:var(--dim);text-align:center;margin-top:22px;}
+  .loading{color:var(--dim);font-family:var(--mono);font-size:13px;text-align:center;padding:60px 0;}
+</style>
+
+<div class="app" id="app">
+  <div class="loading" id="loading">loading progress&hellip;</div>
+</div>
+
+<script>
+(function(){
+
+  const DRILLS = [
+    // ---- Ch0: NumPy / Pandas ----
+    {
+      topic: "NumPy",
+      title: "Row means vs column means",
+      body: "Build a 2D NumPy array of shape (5 students, 4 subjects) with made-up scores. Compute each <b>student's</b> average and each <b>subject's</b> average using <code>.mean(axis=...)</code>. Do NOT look up which axis is which \u2014 guess, run it, and see if the shape of the output matches what you expected.",
+      placeholder: "Which axis did you guess first? Was it right? What shape did each result come out as?",
+      check: [
+        "axis=1 collapses across columns \u2192 one number per row (per student)",
+        "axis=0 collapses across rows \u2192 one number per column (per subject)",
+        "If your output shape didn't match your expectation, that's the actual thing to remember \u2014 not the rule you read"
+      ]
+    },
+    {
+      topic: "NumPy",
+      title: "Break a slice on purpose",
+      body: "Take a DataFrame, slice a subset of rows into a new variable <b>without</b> <code>.copy()</code>, then modify a column on the slice. Check whether the original DataFrame changed too.",
+      placeholder: "Did the original change? Did you get a SettingWithCopyWarning? What fixed it?",
+      check: [
+        "A slice without .copy() is often a view, not a new object \u2014 editing it can silently edit the original",
+        ".copy() forces an independent object",
+        "This is the #1 cause of 'my data changed and I don't know why' bugs later on"
+      ]
+    },
+    {
+      topic: "NumPy",
+      title: "Boolean mask filter",
+      body: "Load any small CSV (or make one with pandas). Filter to rows where one column exceeds its own mean, using a boolean mask \u2014 not <code>.query()</code>, not a loop.",
+      placeholder: "Paste the one line that did the filtering.",
+      check: [
+        "Should look like: df[df['col'] > df['col'].mean()]",
+        "The mask itself is a Series of True/False the same length as df",
+        "If you used a for-loop, redo it \u2014 the point is the vectorised version"
+      ]
+    },
+
+    // ---- Ch1: Scoring ----
+    {
+      topic: "Scoring",
+      title: "Confusion matrix by hand",
+      body: "Write down (on paper or in a comment) 10 true labels and 10 predicted labels of your own invention (mix of 0/1). By hand, count TP, TN, FP, FN. Then compute accuracy, precision, recall, F1 yourself \u2014 no sklearn yet.",
+      placeholder: "What were your 4 counts (TP/TN/FP/FN) and your 4 scores?",
+      check: [
+        "TP+TN+FP+FN should equal 10",
+        "accuracy = (TP+TN)/10",
+        "precision = TP/(TP+FP) \u2014 undefined if you predicted zero positives, know why",
+        "recall = TP/(TP+FN)",
+        "Now check the same 10 labels against sklearn.metrics \u2014 do your numbers match exactly?"
+      ]
+    },
+    {
+      topic: "Scoring",
+      title: "Make accuracy lie",
+      body: "Construct a fake dataset where one class is 95% of the labels. Build a 'model' that just always predicts the majority class (don't even fit anything). Report its accuracy.",
+      placeholder: "What accuracy did the do-nothing model get? What does that number actually tell you about the model?",
+      check: [
+        "Accuracy should land near 95% despite the model doing zero learning",
+        "This is exactly why precision/recall on the minority class matter more here",
+        "If you can't say WHICH class needs the better metric, go back to the confusion matrix drill"
+      ]
+    },
+
+    // ---- Ch1: k-NN ----
+    {
+      topic: "k-NN",
+      title: "Implement k-NN from scratch",
+      body: "No sklearn. Given a small 2D training set (points + class labels) and one new point: (1) compute distance from the new point to every training point, (2) sort, (3) take the k closest, (4) return the majority label. Roughly 15 lines.",
+      placeholder: "Paste your function (or describe where you got stuck).",
+      check: [
+        "Distance is usually Euclidean: sqrt(sum((a-b)**2))",
+        "You need argsort or sorted(..., key=...) to find the k closest, not just min()",
+        "Majority vote on labels \u2014 watch what you do on ties",
+        "Compare your prediction on one test point against sklearn's KNeighborsClassifier for the same k"
+      ]
+    },
+    {
+      topic: "k-NN",
+      title: "k=1 vs k=huge",
+      body: "Using your from-scratch k-NN (or sklearn), run it on the same data with k=1 and with k=(size of training set). Look at how many training points each prediction actually 'listens to'.",
+      placeholder: "In your own words: what does the boundary look like at each extreme, and which one is high-variance vs high-bias?",
+      check: [
+        "k=1: memorises every quirk of training data \u2192 low bias, high variance, jagged boundary",
+        "k=N: every prediction is just the overall majority class \u2192 high bias, low variance, boundary basically disappears",
+        "If you can't point to WHY k=1 overfits (it's fitting noise, not signal), that's the gap"
+      ]
+    },
+
+    // ---- Ch1: Linear regression / GD ----
+    {
+      topic: "Linear regression",
+      title: "Fit by hand, then gradient descent",
+      body: "Make ~20 synthetic (x, y) points roughly on a line with noise. First fit with sklearn's LinearRegression and note m and c. Then write your own gradient descent loop (pick a learning rate, loop N times, update m and c using the loss gradient) and see if you land on close to the same m and c.",
+      placeholder: "sklearn's m and c vs your gradient-descent m and c \u2014 how close did you get?",
+      check: [
+        "update rule: m -= lr * d(loss)/dm, same for c",
+        "if your values explode to inf/nan, your learning rate is too high",
+        "if your values barely move after many iterations, your learning rate is too low or you need more iterations",
+        "you should converge close to sklearn's answer, not identical"
+      ]
+    },
+    {
+      topic: "Linear regression",
+      title: "Break the learning rate on purpose",
+      body: "Using your gradient descent loop from the last drill, set the learning rate absurdly high (watch it diverge) and then absurdly low (watch it crawl). Print the loss every iteration both times.",
+      placeholder: "What did the printed loss sequence look like in each case?",
+      check: [
+        "too high: loss grows or oscillates wildly, possibly to nan",
+        "too low: loss decreases but barely, would take huge iteration counts to converge",
+        "there's a middle range where loss drops steadily \u2014 find it by trial, don't just guess a 'standard' number"
+      ]
+    },
+    {
+      topic: "Linear regression",
+      title: "Loss vs metric, made concrete",
+      body: "Fit a linear regression model. Print BOTH the training loss (mean squared error) and R\u00b2 on the same data. Then intentionally add a feature that's pure random noise and refit \u2014 watch what happens to each number.",
+      placeholder: "What happened to MSE and R\u00b2 when you added the noise feature?",
+      check: [
+        "adding any feature (even noise) to a plain linear regression fit on training data typically won't make training MSE worse, and can make R\u00b2 look slightly better on training data",
+        "this is misleading \u2014 it's overfitting, and you'd see the gap on a held-out test set",
+        "if you didn't check a test set here, that IS the point: go check it"
+      ]
+    },
+
+    // ---- Ch2: Logistic regression / scaling ----
+    {
+      topic: "Logistic regression",
+      title: "Look at actual probabilities",
+      body: "Take a dataset, binarize the target if needed, fit LogisticRegression. Call <code>.predict_proba()</code> (not <code>.predict()</code>) on 5 test points and print the probabilities next to the true labels.",
+      placeholder: "For your 5 points: how close were the probabilities to 0.5? Any the model was unsure about?",
+      check: [
+        "predict() just thresholds predict_proba() at 0.5",
+        "a point at proba=0.51 and a point at proba=0.99 are NOT equally confident, even though predict() calls both '1'",
+        "if every probability was near 0 or 1, try a messier/smaller dataset so you can actually see uncertainty"
+      ]
+    },
+    {
+      topic: "Scaling",
+      title: "Scaling matters here, doesn't matter there",
+      body: "Pick a dataset with features on very different scales (e.g. age vs income). Run k-NN with and without StandardScaler and compare accuracy. Then do the exact same before/after comparison with a DecisionTreeClassifier.",
+      placeholder: "k-NN accuracy before/after scaling? Tree accuracy before/after scaling?",
+      check: [
+        "k-NN should visibly change \u2014 unscaled, the large-magnitude feature dominates the distance calculation",
+        "the tree should barely change, if at all \u2014 it splits on thresholds per feature independently, scale doesn't affect where the best threshold is",
+        "if the tree DID change a lot, check you didn't also change the train/test split between runs"
+      ]
+    },
+
+    // ---- Ch2: PCA ----
+    {
+      topic: "PCA",
+      title: "Reduce to 2D and actually look",
+      body: "Take a dataset with 4+ features and a class label. Standardize the features, run PCA down to 2 components, then scatter-plot the 2 components colored by class label \u2014 without using the label anywhere in the PCA step.",
+      placeholder: "Did the classes visibly separate in the 2D plot, even though PCA never saw the labels?",
+      check: [
+        "PCA is unsupervised \u2014 it should NOT have touched y anywhere before or during fit",
+        "separation isn't guaranteed, but if the original features correlate with the label, it often shows up",
+        "if you scaled AFTER PCA instead of before, redo it \u2014 order matters here"
+      ]
+    },
+
+    // ---- Ch2: Trees / forests ----
+    {
+      topic: "Trees",
+      title: "Overfit a tree on purpose",
+      body: "Fit a DecisionTreeClassifier with max_depth=1, and separately with max_depth=None (unlimited). For each, print BOTH train accuracy and test accuracy.",
+      placeholder: "Your 4 numbers: depth=1 train/test, depth=None train/test.",
+      check: [
+        "depth=1 (a stump): train and test accuracy should be close to each other, both mediocre \u2014 underfitting",
+        "depth=None: train accuracy near 100%, test accuracy noticeably lower \u2014 that gap IS overfitting",
+        "if depth=None also got ~100% on test, your test set is probably too easy or leaking from train \u2014 investigate"
+      ]
+    },
+    {
+      topic: "Trees",
+      title: "Forest vs single tree, same split",
+      body: "Using the exact same train/test split, fit one DecisionTreeClassifier (default depth) and one RandomForestClassifier. Compare test accuracy.",
+      placeholder: "Which won? By how much? Does it match what you'd expect from bagging?",
+      check: [
+        "forest usually matches or beats a single tree on test accuracy, especially if the single tree overfits",
+        "if you can't explain WHY averaging many trees helps in your own words (not 'bagging reduces variance' verbatim), that's the gap \u2014 think about it as many noisy opinions averaging out"
+      ]
+    },
+
+    // ---- Cumulative ----
+    {
+      topic: "Cumulative",
+      title: "Full pipeline, no notes open",
+      body: "Pick one small dataset (even a toy sklearn one). Notes closed. Go: load \u2192 clean \u2192 split \u2192 scale if needed \u2192 fit 2\u20133 different models \u2192 score each with an appropriate metric \u2192 pick a winner and say why in one sentence.",
+      placeholder: "What did you pick, what won, and what's your one-sentence justification?",
+      check: [
+        "if you got through this without opening the notes, Ch0\u2013Ch2 has actually landed",
+        "if you got stuck at a specific step, that step \u2014 not the whole chapter \u2014 is what to go re-drill",
+        "this is the real test; everything before it was just building toward this"
+      ]
+    }
+  ];
+
+  const STORAGE_KEY = "ml-drills-progress-v1";
+  let state = null;
+
+  function freshState(){
+    return {
+      order: DRILLS.map((_, i) => i),
+      pos: 0,
+      requeued: [],
+      results: {}, // idx -> "nailed" | "shaky" | "stuck"
+      revealed: false
+    };
+  }
+
+  async function loadState(){
+    try{
+      const res = await window.storage.get(STORAGE_KEY, false);
+      if(res && res.value){
+        return JSON.parse(res.value);
+      }
+    }catch(e){ /* no saved state yet */ }
+    return freshState();
+  }
+
+  async function saveState(){
+    try{
+      await window.storage.set(STORAGE_KEY, JSON.stringify(state), false);
+    }catch(e){ /* best effort */ }
+  }
+
+  function currentIndex(){
+    if(state.pos < state.order.length) return state.order[state.pos];
+    return null;
+  }
+
+  function counts(){
+    const total = DRILLS.length;
+    const done = Object.keys(state.results).length;
+    const nailed = Object.values(state.results).filter(r => r === "nailed").length;
+    const stuck = Object.values(state.results).filter(r => r === "stuck").length;
+    return {total, done, nailed, stuck};
+  }
+
+  function esc(s){
+    const d = document.createElement('div');
+    d.innerText = s;
+    return d.innerHTML;
+  }
+
+  function render(){
+    const app = document.getElementById('app');
+    const idx = currentIndex();
+
+    if(idx === null){
+      const c = counts();
+      const stuckIdxs = Object.entries(state.results)
+        .filter(([_, r]) => r === "stuck")
+        .map(([i, _]) => parseInt(i));
+      app.innerHTML = `
+        <div class="wrap">
+          <div class="top">
+            <div class="brand">ml drills</div>
+          </div>
+          <div class="done-screen">
+            <h2>Session done.</h2>
+            <p>${c.nailed} nailed &middot; ${c.total - c.nailed - c.stuck} shaky &middot; ${c.stuck} stuck</p>
+            ${stuckIdxs.length ? `
+              <div class="stucklist">
+                <div class="topic" style="margin-bottom:10px;">Revisit these</div>
+                <ul>${stuckIdxs.map(i => `<li>${esc(DRILLS[i].topic)}: ${esc(DRILLS[i].title)}</li>`).join('')}</ul>
+              </div>
+            ` : `<p style="color:var(--accent);">Nothing marked stuck. Good session.</p>`}
+            <div class="btnrow" style="justify-content:center;">
+              ${stuckIdxs.length ? `<button class="btn-primary" id="btn-redo-stuck">Redo stuck ones</button>` : ``}
+              <button class="btn-ghost" id="btn-reset">Reset everything</button>
+            </div>
+          </div>
+          <div class="footer-note">progress saved automatically</div>
+        </div>
+      `;
+      if(stuckIdxs.length){
+        document.getElementById('btn-redo-stuck').onclick = () => {
+          state.order = stuckIdxs;
+          state.pos = 0;
+          state.revealed = false;
+          const keep = {};
+          Object.entries(state.results).forEach(([i, r]) => { if(r !== "stuck") keep[i] = r; });
+          state.results = keep;
+          saveState();
+          render();
+        };
+      }
+      document.getElementById('btn-reset').onclick = () => {
+        state = freshState();
+        saveState();
+        render();
+      };
+      return;
+    }
+
+    const drill = DRILLS[idx];
+    const c = counts();
+    const pct = Math.round((c.done / c.total) * 100);
+
+    app.innerHTML = `
+      <div class="wrap">
+        <div class="top">
+          <div class="brand">ml drills</div>
+          <div class="counts"><span><b>${c.done}</b>/${c.total} done</span><span style="color:var(--danger)">${c.stuck} stuck</span></div>
+        </div>
+        <div class="barwrap"><div class="bar" style="width:${pct}%"></div></div>
+
+        <div class="card">
+          <div class="topic">${esc(drill.topic)}</div>
+          <div class="task-title">${esc(drill.title)}</div>
+          <div class="task-body">${drill.body}</div>
+
+          <label class="field-label">go do it, then say what happened</label>
+          <textarea id="answer" placeholder="${esc(drill.placeholder)}"></textarea>
+          <div class="hint">Don't skip the doing part. This box is for what you found, not a guess.</div>
+
+          <div class="btnrow">
+            <button class="btn-primary" id="btn-reveal" disabled>Show what to check against</button>
+            <button class="btn-ghost" id="btn-skip">Skip for now</button>
+          </div>
+
+          <div class="reveal" id="reveal">
+            <h4>Check yourself against</h4>
+            <ul>${drill.check.map(c => `<li>${c}</li>`).join('')}</ul>
+            <div class="rate-row">
+              <button class="rate-btn nailed" data-r="nailed">Nailed it</button>
+              <button class="rate-btn shaky" data-r="shaky">Kind of, shaky</button>
+              <button class="rate-btn stuck" data-r="stuck">Stuck / wrong</button>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note">stuck items get queued up again at the end</div>
+      </div>
+    `;
+
+    const textarea = document.getElementById('answer');
+    const revealBtn = document.getElementById('btn-reveal');
+    const revealBox = document.getElementById('reveal');
+    const skipBtn = document.getElementById('btn-skip');
+
+    textarea.addEventListener('input', () => {
+      revealBtn.disabled = textarea.value.trim().length === 0;
+    });
+
+    revealBtn.onclick = () => {
+      revealBox.classList.add('show');
+    };
+
+    skipBtn.onclick = () => {
+      state.order.push(idx);
+      state.pos += 1;
+      state.revealed = false;
+      saveState();
+      render();
+    };
+
+    revealBox.querySelectorAll('.rate-btn').forEach(btn => {
+      btn.onclick = () => {
+        const r = btn.getAttribute('data-r');
+        state.results[idx] = r;
+        state.pos += 1;
+        state.revealed = false;
+        saveState();
+        render();
+      };
+    });
+  }
+
+  async function init(){
+    state = await loadState();
+    render();
+  }
+
+  init();
+})();
+</script>
